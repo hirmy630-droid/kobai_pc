@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>図面材料計算</title>
+  <title>図面材料計算 (iPad版)</title>
   <style>
     :root {
       --bg: #000000;
@@ -36,7 +36,7 @@
       height: 100vh;
       width: 100vw;
       overflow: hidden;
-      font-size: 15px; /* 全体+2pt拡大 */
+      font-size: 15px;
       padding-top: env(safe-area-inset-top);
       padding-bottom: env(safe-area-inset-bottom);
     }
@@ -47,37 +47,37 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 14px 8px;
+      padding: 12px 16px 8px;
       border-bottom: 1px solid var(--border);
     }
     header h1 {
-      font-size: 18px; /* +2pt */
+      font-size: 18px;
       font-weight: 700;
       letter-spacing: 0.03em;
     }
     header .brand {
-      font-size: 14px; /* 最低フォントサイズ14px */
+      font-size: 14px;
       color: var(--sub-text);
       font-weight: 700;
       letter-spacing: 0.05em;
     }
 
-    /* タブ切り替えバー（3タブ化） */
+    /* タブバー */
     .tab-bar {
       flex: none;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 6px;
       background-color: var(--card-bg);
-      margin: 6px 6px 4px;
+      margin: 6px 12px 8px;
       padding: 3px;
       border-radius: 9px;
     }
     .tab-btn {
-      padding: 7px 4px;
-      min-height: 36px;
+      padding: 8px 4px;
+      min-height: 38px;
       text-align: center;
-      font-size: 15px; /* +2pt */
+      font-size: 15px;
       font-weight: 700;
       letter-spacing: 0.04em;
       color: var(--sub-text);
@@ -96,14 +96,26 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.5);
     }
 
-    /* メインスクロールエリア */
-    main {
+    /* 全体コンテナ（画面幅に応じて自動切り替え） */
+    #app-body {
       flex: 1;
+      display: flex;
+      flex-direction: column;
       overflow-y: auto;
-      padding: 0 12px 6px;
+      padding: 0 12px 10px;
+      gap: 10px;
+    }
+
+    #left-pane {
       display: flex;
       flex-direction: column;
       gap: 8px;
+    }
+
+    #right-pane {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
     /* 端寸ステータス表示（片張余り・芯割余り） */
@@ -127,19 +139,19 @@
       border: 2px solid var(--accent-green);
     }
     .status-title {
-      font-size: 14px; /* +2pt */
+      font-size: 14px;
       font-weight: 700;
       line-height: 1.3;
     }
     .status-card.blue .status-title { color: var(--accent-blue); }
     .status-card.green .status-title { color: var(--accent-green); }
     .status-num {
-      font-size: 21px; /* +2pt */
+      font-size: 21px;
       font-weight: 800;
       font-family: ui-monospace, SFMono-Regular, monospace;
     }
     .status-num span {
-      font-size: 14px; /* 最低フォントサイズ14px */
+      font-size: 14px;
       font-weight: 500;
       color: var(--sub-text);
       margin-left: 2px;
@@ -167,12 +179,12 @@
       background-color: #1f1b16;
     }
     .input-label {
-      font-size: 14px; /* 最低フォントサイズ14px */
+      font-size: 14px;
       font-weight: 600;
       color: #a1a1aa;
     }
     .input-val {
-      font-size: 21px; /* +2pt */
+      font-size: 21px;
       font-weight: 800;
       font-family: ui-monospace, SFMono-Regular, monospace;
       color: #ffffff;
@@ -184,13 +196,13 @@
       border: 1px solid var(--accent-orange);
       border-radius: 8px;
       padding: 8px 12px;
-      font-size: 14px; /* +2pt */
+      font-size: 14px;
     }
     .summary-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 5px 0;
+      padding: 6px 0;
       border-bottom: 1px solid #27272a;
     }
     .summary-row:last-child {
@@ -203,7 +215,7 @@
     .sum-val {
       font-weight: 700;
       font-family: ui-monospace, SFMono-Regular, monospace;
-      font-size: 16px; /* +1pt拡大 */
+      font-size: 16px;
     }
 
     /* 面積タブ用専用スタイル */
@@ -222,23 +234,22 @@
       gap: 4px;
     }
     .area-stat-title {
-      font-size: 14px; /* 最低フォントサイズ14px */
+      font-size: 14px;
       font-weight: 600;
       color: #a1a1aa;
     }
     .area-stat-val {
-      font-size: 20px; /* +1pt */
+      font-size: 20px;
       font-weight: 800;
       font-family: ui-monospace, SFMono-Regular, monospace;
       color: #ffffff;
     }
     .area-stat-val span {
-      font-size: 14px; /* 最低フォントサイズ14px */
+      font-size: 14px;
       color: var(--sub-text);
       margin-left: 2px;
     }
 
-    /* 面積タブ用 全幅×最長 メインカード */
     .area-total-card {
       background-color: var(--card-bg);
       border: 1px solid #3f3f46;
@@ -265,7 +276,6 @@
       margin-left: 2px;
     }
 
-    /* 面積タブ 保存済みカード */
     .area-hist-card {
       background-color: var(--card-bg);
       border: 1px solid var(--border);
@@ -276,7 +286,7 @@
       gap: 5px;
     }
 
-    /* 保存データ一覧スタイル（面積データとサイズ統一） */
+    /* 保存データ一覧スタイル */
     #section-history {
       display: flex;
       flex-direction: column;
@@ -297,16 +307,16 @@
       align-items: center;
     }
     .history-title {
-      font-size: 15px; /* 面積データと同じ15px */
+      font-size: 15px;
       font-weight: 700;
       color: #ffffff;
     }
     .history-date {
-      font-size: 14px; /* 最低フォントサイズ14px */
+      font-size: 14px;
       color: var(--sub-text);
     }
     .history-body {
-      font-size: 14px; /* 最低フォントサイズ14px */
+      font-size: 14px;
       color: #d4d4d8;
       line-height: 1.4;
       display: flex;
@@ -321,7 +331,7 @@
     }
     .hist-btn {
       padding: 5px 12px;
-      font-size: 14px; /* 最低フォントサイズ14px */
+      font-size: 14px;
       font-weight: 600;
       border-radius: 6px;
       border: 1px solid var(--border);
@@ -357,7 +367,7 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       height: 44px;
-      font-size: 22px; /* +2pt */
+      font-size: 22px;
       font-weight: 700;
       font-family: ui-monospace, SFMono-Regular, monospace;
       display: flex;
@@ -371,7 +381,7 @@
     }
     .key-btn.action {
       background-color: #3f3f46;
-      font-size: 15px; /* +2pt */
+      font-size: 15px;
       color: #e4e4e7;
     }
     .key-btn.del {
@@ -381,7 +391,7 @@
     .key-btn.save {
       background-color: #15803d;
       color: #ffffff;
-      font-size: 15px; /* +2pt */
+      font-size: 15px;
       font-weight: 700;
     }
 
@@ -465,7 +475,7 @@
       z-index: 300;
     }
 
-    /* 11インチiPad（画面幅768px以上）向け2カラム最適化 */
+    /* iPad・大画面（幅768px以上）での左右2カラム最適化 */
     @media (min-width: 768px) {
       body {
         font-size: 16px;
@@ -478,7 +488,7 @@
       }
       .tab-bar {
         max-width: 760px;
-        margin: 8px auto 6px;
+        margin: 8px auto 8px;
         gap: 8px;
         padding: 4px;
       }
@@ -488,11 +498,8 @@
         min-height: 40px;
       }
 
-      /* iPad用レイアウト：全体を左右に分割 */
       #app-body {
-        display: flex;
         flex-direction: row;
-        flex: 1;
         overflow: hidden;
         max-width: 1200px;
         width: 100%;
@@ -501,24 +508,20 @@
         gap: 16px;
       }
 
-      /* 左ペイン：入力ボックスとテンキー */
+      /* 左ペイン：入力ボックス群とテンキー */
       #left-pane {
         flex: 0 0 420px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
         background-color: #111113;
         border: 1px solid var(--border);
         border-radius: 14px;
         padding: 16px;
         overflow-y: auto;
+        gap: 12px;
       }
 
-      /* 右ペイン：結果表示、面積計算、保存一覧 */
+      /* 右ペイン：結果・面積・履歴表示 */
       #right-pane {
         flex: 1;
-        display: flex;
-        flex-direction: column;
         background-color: #111113;
         border: 1px solid var(--border);
         border-radius: 14px;
@@ -527,7 +530,6 @@
         gap: 14px;
       }
 
-      /* iPad時はフッターを左ペイン内に統合 */
       footer {
         background: transparent;
         border-top: none;
@@ -538,7 +540,7 @@
         gap: 8px;
       }
       .key-btn {
-        height: 52px;
+        height: 50px;
         font-size: 24px;
       }
     }
@@ -557,51 +559,60 @@
     <button class="tab-btn" id="tab-hist" onclick="setMode('hist')">保存一覧</button>
   </div>
 
-  <!-- iPad時は左右2分割コンテナ、iPhone時は縦並び -->
+  <!-- iPad時は左右2分割コンテナ、スマホ・プレビュー時は縦スクロール -->
   <div id="app-body">
     <div id="left-pane">
-      <!-- 寸法入力欄エリア -->
-      <div id="input-controls" style="display: flex; flex-direction: column; gap: 8px;">
-        <!-- 全幅・最長 -->
-        <div class="grid-row-2">
-          <div class="input-box" id="box-wallW" onclick="selectField('wallW')">
-            <div class="input-label">全幅</div>
-            <div class="input-val" id="val-wallW">10000</div>
-          </div>
-          <div class="input-box" id="box-wallH" onclick="selectField('wallH')">
-            <div class="input-label">最長</div>
-            <div class="input-val" id="val-wallH">6000</div>
-          </div>
+      <!-- ① 片張余り・芯割余り -->
+      <div class="status-row">
+        <div class="status-card blue">
+          <div class="status-title">片張余り</div>
+          <div class="status-num" id="disp-end-dim">0<span>mm</span></div>
         </div>
-
-        <!-- 働幅 & 開口数 -->
-        <div class="grid-row-2">
-          <div class="input-box active" id="box-pitch" onclick="selectField('pitch')">
-            <div class="input-label">働幅</div>
-            <div class="input-val" id="val-pitch">780</div>
-          </div>
-          <div class="input-box" id="box-opCount" onclick="selectField('opCount')">
-            <div class="input-label">開口数</div>
-            <div class="input-val" id="val-opCount">0</div>
-          </div>
+        <div class="status-card green">
+          <div class="status-title">芯割余り</div>
+          <div class="status-num" id="disp-center-dim">0<span>mm</span></div>
         </div>
+      </div>
 
-        <!-- 開口寸法（開口幅・開口高） -->
-        <div class="grid-row-2">
-          <div class="input-box" id="box-opW" onclick="selectField('opW')">
-            <div class="input-label">開口幅</div>
-            <div class="input-val" id="val-opW">0</div>
-          </div>
-          <div class="input-box" id="box-opH" onclick="selectField('opH')">
-            <div class="input-label">開口高</div>
-            <div class="input-val" id="val-opH">0</div>
-          </div>
+      <!-- ② 全幅（1行表示） -->
+      <div class="input-box" id="box-wallW" onclick="selectField('wallW')">
+        <div class="input-label">全幅</div>
+        <div class="input-val" id="val-wallW">10000</div>
+      </div>
+
+      <!-- ③ 最長 & 働幅 -->
+      <div class="grid-row-2">
+        <div class="input-box" id="box-wallH" onclick="selectField('wallH')">
+          <div class="input-label">最長</div>
+          <div class="input-val" id="val-wallH">6000</div>
         </div>
+        <div class="input-box active" id="box-pitch" onclick="selectField('pitch')">
+          <div class="input-label">働幅</div>
+          <div class="input-val" id="val-pitch">780</div>
+        </div>
+      </div>
 
-        <!-- 開口下高さ -->
+      <!-- ④ 開口幅 & 開口高 -->
+      <div class="grid-row-2">
+        <div class="input-box" id="box-opW" onclick="selectField('opW')">
+          <div class="input-label">開口幅</div>
+          <div class="input-val" id="val-opW">0</div>
+        </div>
+        <div class="input-box" id="box-opH" onclick="selectField('opH')">
+          <div class="input-label">開口高</div>
+          <div class="input-val" id="val-opH">0</div>
+        </div>
+      </div>
+
+      <!-- ⑤ 開口下 & 開口数 -->
+      <div class="grid-row-2">
         <div class="input-box" id="box-opY" onclick="selectField('opY')">
-          <div class="input-label">開口下高さ</div>
+          <div class="input-label">開口下</div>
           <div class="input-val" id="val-opY">0</div>
+        </div>
+        <div class="input-box" id="box-opCount" onclick="selectField('opCount')">
+          <div class="input-label">開口数</div>
+          <div class="input-val" id="val-opCount">0</div>
         </div>
       </div>
 
@@ -631,38 +642,26 @@
       </footer>
     </div>
 
-    <!-- 右ペイン：結果・面積・履歴表示 -->
+    <!-- 右ペイン：結果表示・面積計算・履歴 -->
     <main id="right-pane">
       <!-- ① 寸法割付タブ専用エリア -->
       <div id="section-dim-tab" style="display: flex; flex-direction: column; gap: 10px;">
-        <!-- 端寸ステータス表示（片張余り・芯割余り） -->
-        <div class="status-row">
-          <div class="status-card blue">
-            <div class="status-title">片張余り</div>
-            <div class="status-num" id="disp-end-dim">0<span>mm</span></div>
-          </div>
-          <div class="status-card green">
-            <div class="status-title">芯割余り</div>
-            <div class="status-num" id="disp-center-dim">0<span>mm</span></div>
-          </div>
-        </div>
-
-        <!-- 材料取り内訳（寸法割付タブ専用） -->
+        <!-- 材料取り内訳（円数字なし・最長部に統一） -->
         <div class="summary-card">
           <div class="summary-row">
             <div class="sum-title">【結果】総必要枚数</div>
             <div class="sum-val" style="color:var(--accent-blue); font-size:20px;" id="res-total-sheets">13 枚</div>
           </div>
           <div class="summary-row">
-            <div class="sum-title">① 最長部 (通し材)</div>
+            <div class="sum-title">最長部</div>
             <div class="sum-val" id="res-full-info">L=6000mm × 13枚</div>
           </div>
           <div class="summary-row">
-            <div class="sum-title">② 開口部上</div>
+            <div class="sum-title">開口部上</div>
             <div class="sum-val" id="res-top-info">L=0mm × 0枚</div>
           </div>
           <div class="summary-row">
-            <div class="sum-title">③ 開口部下</div>
+            <div class="sum-title">開口部下</div>
             <div class="sum-val" id="res-bot-info">L=0mm × 0枚</div>
           </div>
         </div>
@@ -738,10 +737,22 @@
   <div id="toast">保存しました</div>
 
   <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((registration) => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          })
+          .catch((err) => {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+      });
+    }
+
     const state = {
       mode: 'dim',
       activeField: 'pitch',
-      isOverwrite: true, // 入力欄選択直後の上書きフラグ
+      isOverwrite: true,
       values: {
         wallW: '10000',
         wallH: '6000',
@@ -804,7 +815,6 @@
         secDimTab.style.display = 'none';
         secAreaTab.style.display = 'flex';
         secHist.style.display = 'none';
-        // iPhoneでは非表示、iPadでは常時操作可能なように制御
         footer.style.display = isIPad ? 'block' : 'none';
         loadAreaHistoryList();
       } else if (mode === 'hist') {
@@ -833,23 +843,19 @@
       const diffX = touchEndX - touchStartX;
       const diffY = touchEndY - touchStartY;
 
-      // 縦スクロールと誤認しないように横移動が大きい場合のみ判定 (50px以上)
       if (Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
         const currIdx = MODES.indexOf(state.mode);
         if (diffX < 0 && currIdx < MODES.length - 1) {
-          // 左スワイプ -> 次のタブへ
           setMode(MODES[currIdx + 1]);
         } else if (diffX > 0 && currIdx > 0) {
-          // 右スワイプ -> 前のタブへ
           setMode(MODES[currIdx - 1]);
         }
       }
     }, { passive: true });
 
-    // 入力欄選択時に「上書き待機状態」にする
     function selectField(field) {
       state.activeField = field;
-      state.isOverwrite = true; // 上書きフラグを立てる
+      state.isOverwrite = true;
       document.querySelectorAll('.input-box').forEach(el => el.classList.remove('active'));
       const activeEl = document.getElementById(`box-${field}`);
       if (activeEl) activeEl.classList.add('active');
@@ -858,7 +864,6 @@
     function pressKey(key) {
       const field = state.activeField;
 
-      // 選択直後の場合は既存の値を上書き
       if (state.isOverwrite) {
         state.values[field] = (key === '.') ? '0.' : (key === '00' ? '0' : key);
         state.isOverwrite = false;
@@ -907,10 +912,8 @@
       }
     }
 
-    // 小数点第3位を無条件切り上げして小数点第2位（0.00）形式にする関数
     function ceilTo2(num) {
       if (isNaN(num) || num <= 0) return '0.00';
-      // 浮動小数点数の計算誤差（0.000000001等）を吸収して切り上げ
       const rounded = Math.round(num * 1000000) / 10000;
       const ceiled = Math.ceil(rounded) / 100;
       return ceiled.toFixed(2);
@@ -925,7 +928,7 @@
       const W = parseFloat(state.values.wallW) || 0;
       const H = parseFloat(state.values.wallH) || 0;
 
-      // 1. 面積計算（全て小数点第2位まで・切り上げ）
+      // 1. 面積計算（小数点第2位まで・切り上げ）
       const grossM2Raw = (W * H) / 1000000;
       const totalOpM2Raw = (OpW * OpH * OpCount) / 1000000;
       const netM2Raw = Math.max(0, grossM2Raw - totalOpM2Raw);
@@ -1008,7 +1011,6 @@
         });
       } catch (e) {}
 
-      // 日付は含めず連番「No.〇」のみを初期値とする（現場名などを直接手入力できるように後ろに半角スペースを付与）
       const defaultTitle = `No.${count} `;
       const input = document.getElementById('save-title-input');
       input.value = defaultTitle;
@@ -1136,9 +1138,10 @@
               </div>
               <div class="history-body">
                 <div>総枚数: <strong style="color:var(--accent-blue); font-size:17px;">${item.results.total}</strong> (働幅: ${item.values.pitch}mm)</div>
-                <div>全体面積: ${item.results.grossM2 || '―'} / 実面積: ${item.results.netM2 || '―'} / 開口: ${item.results.opM2 || '―'}</div>
+                <div>全体面積: ${item.results.grossM2 || '―'}</div>
+                <div>実面積: ${item.results.netM2 || '―'} / 開口: ${item.results.opM2 || '―'}</div>
                 <div>片張余り: ${item.results.endDim} / 芯割余り: ${item.results.centerDim}</div>
-                <div>通し材: ${item.results.full}</div>
+                <div>最長部: ${item.results.full}</div>
                 ${item.results.top.includes('× 0枚') ? '' : `<div>開口上: ${item.results.top}</div>`}
                 ${item.results.bot.includes('× 0枚') ? '' : `<div>開口下: ${item.results.bot}</div>`}
               </div>

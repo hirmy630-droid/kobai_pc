@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bankin-calc-v2';
+const CACHE_NAME = 'bankin-calc-v3'; // Updated Cache Name
 const APP_SHELL = [
   './',
   './index.html',
