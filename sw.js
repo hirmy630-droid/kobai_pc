@@ -1,4 +1,4 @@
-const CACHE_NAME = 'slope-calc-mac-v20260928-01';
+const CACHE_NAME = 'slope-calc-mac-v20260928-02';
 const APP_SHELL = [
   './',
   './index.html',
