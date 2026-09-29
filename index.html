@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>勾配 寸法計算 (Mac版)</title>
+    <title>勾配 寸法計算 (Mac版 15インチ最適化)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="manifest" href="./manifest.json">
     <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
@@ -22,8 +22,8 @@
 
         /* カスタムスクロールバー */
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
         }
         ::-webkit-scrollbar-track {
             background: #1c1c1e;
@@ -52,109 +52,109 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col p-4 md:p-6 lg:p-8">
+<body class="min-h-screen flex flex-col p-2.5 md:p-3 lg:px-5 lg:py-2.5">
 
-    <!-- ヘッダー -->
-    <header class="max-w-[1600px] w-full mx-auto flex items-center justify-between pb-4 mb-4 border-b border-[#2c2c2e]">
-        <div class="flex items-center gap-3">
-            <div class="w-3.5 h-3.5 rounded-full bg-[#ff5f56]"></div>
-            <div class="w-3.5 h-3.5 rounded-full bg-[#ffbd2e]"></div>
-            <div class="w-3.5 h-3.5 rounded-full bg-[#27c93f]"></div>
-            <h1 class="text-xl md:text-2xl font-bold tracking-tight text-white ml-2">勾配 寸法計算</h1>
-            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-[#2c2c2e] text-[#8e8e93]">for Mac</span>
+    <!-- ヘッダー (Mac 15インチの作業領域を最大化するため縦幅をスリム化) -->
+    <header class="max-w-[1680px] w-full mx-auto flex items-center justify-between pb-2 mb-2 border-b border-[#2c2c2e]">
+        <div class="flex items-center gap-2.5">
+            <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
+            <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
+            <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
+            <h1 class="text-lg md:text-xl font-bold tracking-tight text-white ml-1">勾配 寸法計算</h1>
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-[#2c2c2e] text-[#8e8e93]">for Mac 15"</span>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2">
             <span class="text-xs font-bold tracking-wider text-[#8e8e93]">KYOWA ROOF</span>
-            <button id="btnShare" type="button" onclick="shareOrCopyData()" class="px-4 py-2 bg-[#0a84ff] hover:bg-[#0071e3] text-white text-sm font-semibold rounded-lg shadow-sm transition-all flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <button id="btnShare" type="button" onclick="shareOrCopyData()" class="px-3 py-1 bg-[#0a84ff] hover:bg-[#0071e3] text-white text-xs font-semibold rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                 結果をコピー
             </button>
-            <button id="btnResetAll" type="button" onclick="resetAllInputs()" class="px-3 py-2 bg-[#2c2c2e] hover:bg-[#3a3a3c] text-[#ff453a] text-sm font-semibold rounded-lg transition-all">
+            <button id="btnResetAll" type="button" onclick="resetAllInputs()" class="px-2.5 py-1 bg-[#2c2c2e] hover:bg-[#3a3a3c] text-[#ff453a] text-xs font-semibold rounded-lg transition-all">
                 全クリア
             </button>
         </div>
     </header>
 
     <!-- メインコンテンツ (左右2カラム構成) -->
-    <main class="max-w-[1600px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 items-start">
+    <main class="max-w-[1680px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 items-start">
         
         <!-- 左カラム：入力欄 + 計算結果サマリー + 図面描画 -->
-        <section class="lg:col-span-7 flex flex-col gap-6">
+        <section class="lg:col-span-7 flex flex-col gap-2">
             
-            <!-- 入力カード (Macキーボード入力専用) -->
-            <div class="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-5 shadow-lg">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">設計寸法 入力 (キーボード対応)</h2>
-                    <span class="text-xs text-[#8e8e93]">Tabキーで次の項目へ移動 / 入力時に即時計算</span>
+            <!-- 入力カード (フォントサイズ不変・縦幅のみ圧縮) -->
+            <div class="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl px-3 py-1 shadow-lg">
+                <div class="flex items-center justify-between mb-0.5">
+                    <h2 class="text-xs font-semibold text-[#8e8e93] uppercase tracking-wide">設計寸法 入力 (キーボード対応)</h2>
+                    <span class="text-[11px] text-[#8e8e93]">Tabキーで移動 / 即時計算</span>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                     <!-- 基準側 L1 -->
-                    <div class="bg-[#121214] border border-[#2c2c2e] rounded-lg p-3 focus-within:border-[#30d158] focus-within:ring-1 focus-within:ring-[#30d158] transition-all">
-                        <div class="flex justify-between items-center mb-1">
+                    <div class="bg-[#121214] border border-[#2c2c2e] rounded-lg px-2.5 py-0.5 focus-within:border-[#30d158] focus-within:ring-1 focus-within:ring-[#30d158] transition-all">
+                        <div class="flex justify-between items-center leading-none">
                             <label for="input-L1" class="text-xs font-bold text-[#30d158]">基準側 L1 (mm)</label>
-                            <button type="button" onclick="clearField('L1')" class="text-[11px] text-[#636366] hover:text-[#aeaeb2]">クリア</button>
+                            <button type="button" onclick="clearField('L1')" class="text-[10px] text-[#636366] hover:text-[#aeaeb2]">クリア</button>
                         </div>
-                        <input type="number" id="input-L1" step="any" min="0" placeholder="0" class="w-full bg-transparent text-2xl font-bold text-white text-right focus:outline-none" oninput="handleInputChange()">
+                        <input type="number" id="input-L1" step="any" min="0" placeholder="0" class="w-full bg-transparent text-2xl font-bold text-white text-right focus:outline-none leading-none py-0 my-0 h-8" oninput="handleInputChange()">
                     </div>
 
                     <!-- 延長側 L2 -->
-                    <div class="bg-[#121214] border border-[#2c2c2e] rounded-lg p-3 focus-within:border-[#30d158] focus-within:ring-1 focus-within:ring-[#30d158] transition-all">
-                        <div class="flex justify-between items-center mb-1">
+                    <div class="bg-[#121214] border border-[#2c2c2e] rounded-lg px-2.5 py-0.5 focus-within:border-[#30d158] focus-within:ring-1 focus-within:ring-[#30d158] transition-all">
+                        <div class="flex justify-between items-center leading-none">
                             <label for="input-L2" class="text-xs font-bold text-[#30d158]">延長側 L2 (mm)</label>
-                            <button type="button" onclick="clearField('L2')" class="text-[11px] text-[#636366] hover:text-[#aeaeb2]">クリア</button>
+                            <button type="button" onclick="clearField('L2')" class="text-[10px] text-[#636366] hover:text-[#aeaeb2]">クリア</button>
                         </div>
-                        <input type="number" id="input-L2" step="any" min="0" placeholder="0" class="w-full bg-transparent text-2xl font-bold text-white text-right focus:outline-none" oninput="handleInputChange()">
+                        <input type="number" id="input-L2" step="any" min="0" placeholder="0" class="w-full bg-transparent text-2xl font-bold text-white text-right focus:outline-none leading-none py-0 my-0 h-8" oninput="handleInputChange()">
                     </div>
 
                     <!-- 全体の幅 W -->
-                    <div class="bg-[#121214] border border-[#2c2c2e] rounded-lg p-3 focus-within:border-[#0a84ff] focus-within:ring-1 focus-within:ring-[#0a84ff] transition-all">
-                        <div class="flex justify-between items-center mb-1">
+                    <div class="bg-[#121214] border border-[#2c2c2e] rounded-lg px-2.5 py-0.5 focus-within:border-[#0a84ff] focus-within:ring-1 focus-within:ring-[#0a84ff] transition-all">
+                        <div class="flex justify-between items-center leading-none">
                             <label for="input-W" class="text-xs font-bold text-[#0a84ff]">全体の幅 W (mm)</label>
-                            <button type="button" onclick="clearField('W')" class="text-[11px] text-[#636366] hover:text-[#aeaeb2]">クリア</button>
+                            <button type="button" onclick="clearField('W')" class="text-[10px] text-[#636366] hover:text-[#aeaeb2]">クリア</button>
                         </div>
-                        <input type="number" id="input-W" step="any" min="0" placeholder="0" class="w-full bg-transparent text-2xl font-bold text-white text-right focus:outline-none" oninput="handleInputChange()">
+                        <input type="number" id="input-W" step="any" min="0" placeholder="0" class="w-full bg-transparent text-2xl font-bold text-white text-right focus:outline-none leading-none py-0 my-0 h-8" oninput="handleInputChange()">
                     </div>
 
                     <!-- 働き幅 ＠ -->
-                    <div class="bg-[#121214] border border-[#2c2c2e] rounded-lg p-3 focus-within:border-[#bf5af2] focus-within:ring-1 focus-within:ring-[#bf5af2] transition-all">
-                        <div class="flex justify-between items-center mb-1">
+                    <div class="bg-[#121214] border border-[#2c2c2e] rounded-lg px-2.5 py-0.5 focus-within:border-[#bf5af2] focus-within:ring-1 focus-within:ring-[#bf5af2] transition-all">
+                        <div class="flex justify-between items-center leading-none">
                             <label for="input-Pitch" class="text-xs font-bold text-[#bf5af2]">働き幅 ＠ (mm)</label>
-                            <button type="button" onclick="clearField('Pitch')" class="text-[11px] text-[#636366] hover:text-[#aeaeb2]">クリア</button>
+                            <button type="button" onclick="clearField('Pitch')" class="text-[10px] text-[#636366] hover:text-[#aeaeb2]">クリア</button>
                         </div>
-                        <input type="number" id="input-Pitch" step="any" min="0" placeholder="0" class="w-full bg-transparent text-2xl font-bold text-white text-right focus:outline-none" oninput="handleInputChange()">
+                        <input type="number" id="input-Pitch" step="any" min="0" placeholder="0" class="w-full bg-transparent text-2xl font-bold text-white text-right focus:outline-none leading-none py-0 my-0 h-8" oninput="handleInputChange()">
                     </div>
                 </div>
             </div>
 
-            <!-- 計算結果サマリー -->
-            <div class="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-5 shadow-lg">
-                <h2 class="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide mb-3">計算結果 概要</h2>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <div class="bg-[#121214] border border-[#2c2c2e] p-3 rounded-lg text-center">
-                        <span class="block text-xs font-bold text-[#0a84ff] mb-1">延長後の幅</span>
-                        <span id="resNewB" class="text-2xl font-black text-white">-</span>
+            <!-- 計算結果サマリー (フォントサイズ不変・縦幅のみ圧縮) -->
+            <div class="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl px-3 py-1 shadow-lg">
+                <h2 class="text-xs font-semibold text-[#8e8e93] uppercase tracking-wide mb-0.5 leading-none">計算結果 概要</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                    <div class="bg-[#121214] border border-[#2c2c2e] px-2 py-0.5 rounded-lg text-center">
+                        <span class="block text-xs font-bold text-[#0a84ff] leading-none mb-0.5">延長後の幅</span>
+                        <span id="resNewB" class="text-2xl font-black text-white leading-none block">-</span>
                     </div>
-                    <div class="bg-[#121214] border border-[#2c2c2e] p-3 rounded-lg text-center">
-                        <span class="block text-xs font-bold text-[#30d158] mb-1">延長後のL2</span>
-                        <span id="resNewC" class="text-2xl font-black text-white">-</span>
+                    <div class="bg-[#121214] border border-[#2c2c2e] px-2 py-0.5 rounded-lg text-center">
+                        <span class="block text-xs font-bold text-[#30d158] leading-none mb-0.5">延長後のL2</span>
+                        <span id="resNewC" class="text-2xl font-black text-white leading-none block">-</span>
                     </div>
-                    <div class="bg-[#121214] border border-[#2c2c2e] p-3 rounded-lg text-center">
-                        <span class="block text-xs font-bold text-[#ff9f0a] mb-1">総枚数</span>
-                        <span id="resIntervalCount" class="text-2xl font-black text-white">-</span>
+                    <div class="bg-[#121214] border border-[#2c2c2e] px-2 py-0.5 rounded-lg text-center">
+                        <span class="block text-xs font-bold text-[#ff9f0a] leading-none mb-0.5">総枚数</span>
+                        <span id="resIntervalCount" class="text-2xl font-black text-white leading-none block">-</span>
                     </div>
-                    <div class="bg-[#121214] border border-[#2c2c2e] p-3 rounded-lg text-center">
-                        <span class="block text-xs font-bold text-[#bf5af2] mb-1">増分 (1枚あたり)</span>
-                        <span id="resStep" class="text-2xl font-black text-white">-</span>
+                    <div class="bg-[#121214] border border-[#2c2c2e] px-2 py-0.5 rounded-lg text-center">
+                        <span class="block text-xs font-bold text-[#bf5af2] leading-none mb-0.5">増分 (1枚あたり)</span>
+                        <span id="resStep" class="text-2xl font-black text-white leading-none block">-</span>
                     </div>
                 </div>
             </div>
 
-            <!-- 勾配断面図 Canvas -->
-            <div class="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-5 shadow-lg flex flex-col">
-                <div class="flex items-center justify-between mb-3">
-                    <h2 class="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">勾配 断面形状図</h2>
-                    <span class="text-xs text-[#8e8e93]">クリックで拡大プレビュー</span>
+            <!-- 勾配断面図 Canvas (作図の大きさ・アスペクト比 16:9 はそのまま維持) -->
+            <div class="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-3 shadow-lg flex flex-col">
+                <div class="flex items-center justify-between mb-1.5">
+                    <h2 class="text-xs font-semibold text-[#8e8e93] uppercase tracking-wide">勾配 断面形状図</h2>
+                    <span class="text-[11px] text-[#8e8e93]">クリックで拡大プレビュー</span>
                 </div>
                 <div class="w-full bg-[#121214] border border-[#2c2c2e] rounded-lg aspect-[16/9] overflow-hidden cursor-pointer relative" onclick="openZoomModal()">
                     <canvas id="slopeCanvas" class="w-full h-full block"></canvas>
@@ -162,25 +162,25 @@
             </div>
         </section>
 
-        <!-- 右カラム：寸法詳細テーブル -->
+        <!-- 右カラム：寸法詳細テーブル (Mac 15インチのウィンドウ高さいっぱいに収まるよう最適化) -->
         <section class="lg:col-span-5 flex flex-col">
-            <div class="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-5 shadow-lg flex flex-col">
-                <div class="flex items-center justify-between pb-3 mb-3 border-b border-[#2c2c2e]">
+            <div class="bg-[#1c1c1e] border border-[#2c2c2e] rounded-xl p-3.5 shadow-lg flex flex-col">
+                <div class="flex items-center justify-between pb-1.5 mb-1.5 border-b border-[#2c2c2e]">
                     <div class="flex items-center gap-2">
-                        <h2 class="text-base font-bold text-white">各ピッチ寸法詳細</h2>
-                        <span id="table-summary" class="text-sm font-bold text-[#ff9f0a] bg-[#ff9f0a]/10 px-2 py-0.5 rounded">0枚</span>
+                        <h2 class="text-sm font-bold text-white">各ピッチ寸法詳細</h2>
+                        <span id="table-summary" class="text-xs font-bold text-[#ff9f0a] bg-[#ff9f0a]/10 px-2 py-0.5 rounded">0枚</span>
                     </div>
-                    <span class="text-xs text-[#8e8e93]">単位: mm</span>
+                    <span class="text-[11px] text-[#8e8e93]">単位: mm</span>
                 </div>
 
-                <!-- スクロール可能な表コンテナ -->
-                <div class="overflow-y-auto max-h-[calc(100vh-280px)] rounded-lg border border-[#2c2c2e]">
+                <!-- スクロール可能な表コンテナ (画面高さに応じて心地よく伸縮) -->
+                <div class="overflow-y-auto max-h-[calc(100vh-105px)] rounded-lg border border-[#2c2c2e]">
                     <table class="result-table w-full border-collapse bg-[#121214] text-sm">
-                        <thead class="sticky top-0 bg-[#242426] z-10">
+                        <thead class="sticky top-0 bg-[#242426] z-10 shadow-sm">
                             <tr>
-                                <th class="w-16 text-[#ff9f0a] py-2.5 font-bold">No.</th>
-                                <th class="text-[#0a84ff] py-2.5 font-bold">働き幅累計</th>
-                                <th class="text-[#30d158] py-2.5 font-bold">屋根長さ</th>
+                                <th class="w-16 text-[#ff9f0a] py-2 font-bold text-xs">No.</th>
+                                <th class="text-[#0a84ff] py-2 font-bold text-xs">働き幅累計</th>
+                                <th class="text-[#30d158] py-2 font-bold text-xs">屋根長さ</th>
                             </tr>
                         </thead>
                         <tbody id="resultBody">
@@ -195,10 +195,10 @@
 
     </main>
 
-    <!-- トースト通知コンテナ (alert代替) -->
-    <div id="toast" class="fixed bottom-6 right-6 bg-[#2c2c2e] text-white px-4 py-3 rounded-lg shadow-2xl border border-[#48484a] flex items-center gap-2 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 z-50">
-        <svg class="w-5 h-5 text-[#30d158]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-        <span id="toastMsg" class="text-sm font-medium">通知メッセージ</span>
+    <!-- トースト通知コンテナ (alert不使用) -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-[#2c2c2e] text-white px-4 py-2.5 rounded-lg shadow-2xl border border-[#48484a] flex items-center gap-2 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 z-50">
+        <svg class="w-4 h-4 text-[#30d158]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        <span id="toastMsg" class="text-xs font-medium">通知メッセージ</span>
     </div>
 
     <!-- 拡大モーダル -->
@@ -207,7 +207,7 @@
             <div class="flex justify-between items-center mb-3">
                 <span class="text-sm font-semibold text-white">拡大表示</span>
                 <button type="button" onclick="closeZoomModal()" class="text-[#8e8e93] hover:text-white p-1 rounded-lg">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
             <div class="flex-1 flex items-center justify-center overflow-hidden">
@@ -297,7 +297,7 @@
             resStep.innerText = Math.round(Math.abs(step)).toLocaleString();
             tableSummary.innerText = `${count}枚`;
 
-            // 寸法テーブル生成
+            // 寸法テーブル生成 (フォントサイズは維持したまま適度な行高さを設定)
             let tableHtml = '';
             for (let i = 0; i <= count; i++) {
                 const dist = i * interval;
@@ -308,9 +308,9 @@
 
                 tableHtml += `
                     <tr class="hover:bg-[#1f1f22] transition-colors">
-                        <td class="text-center font-bold text-[#ff9f0a] py-2.5">${i}</td>
-                        <td class="text-center font-semibold ${distColor} py-2.5">${Math.round(dist).toLocaleString()}</td>
-                        <td class="text-center font-extrabold text-lg ${heightColor} py-2.5">${Math.round(height).toLocaleString()}</td>
+                        <td class="text-center font-bold text-[#ff9f0a] py-1.5">${i}</td>
+                        <td class="text-center font-semibold ${distColor} py-1.5">${Math.round(dist).toLocaleString()}</td>
+                        <td class="text-center font-extrabold text-base md:text-lg ${heightColor} py-1.5">${Math.round(height).toLocaleString()}</td>
                     </tr>
                 `;
             }
@@ -320,14 +320,14 @@
             const scrapL = newC - c;
             tableHtml += `
                 <tr class="bg-[#242426]">
-                    <td class="text-center font-bold text-[#aeaeb2] py-2.5 text-xs">端材</td>
-                    <td class="text-center text-[#0a84ff] py-2.5">
-                        <span class="text-[11px] text-[#8e8e93] block">働き端材</span>
+                    <td class="text-center font-bold text-[#aeaeb2] py-2 text-xs">端材</td>
+                    <td class="text-center text-[#0a84ff] py-2">
+                        <span class="text-[10px] text-[#8e8e93] block leading-tight">働き端材</span>
                         <span class="font-bold">${Math.round(scrapW).toLocaleString()}</span>
                     </td>
-                    <td class="text-center text-[#30d158] py-2.5">
-                        <span class="text-[11px] text-[#8e8e93] block">長さ端材</span>
-                        <span class="font-extrabold text-lg">${Math.round(scrapL).toLocaleString()}</span>
+                    <td class="text-center text-[#30d158] py-2">
+                        <span class="text-[10px] text-[#8e8e93] block leading-tight">長さ端材</span>
+                        <span class="font-extrabold text-base md:text-lg">${Math.round(scrapL).toLocaleString()}</span>
                     </td>
                 </tr>
             `;
@@ -344,7 +344,7 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
-        // 勾配図面の描画
+        // 勾配図面の描画 (16:9のキャンバスサイズを保ちつつ正確に描画)
         function drawSlope(a, origB, origC, newB, newC, count, interval) {
             const canvas = document.getElementById('slopeCanvas');
             if (!canvas) return;
@@ -499,7 +499,7 @@
             document.getElementById('zoomModal').classList.add('hidden');
         }
 
-        // トースト通知表示 (alert不使用)
+        // トースト通知表示 (alert完全不使用)
         function showToast(message) {
             const toast = document.getElementById('toast');
             const toastMsg = document.getElementById('toastMsg');
@@ -544,15 +544,13 @@
                 }
             });
 
-            return lines.join('
-');
+            return lines.join('\n');
         }
 
         // クリップボードコピー処理 (Macブラウザ対応)
         async function shareOrCopyData() {
             const text = buildShareText();
 
-            // document.execCommand('copy') による確実なフォールバック
             const fallbackCopy = (str) => {
                 const el = document.createElement('textarea');
                 el.value = str;
@@ -604,6 +602,17 @@
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, (err) => {
                     console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then((registration) => {
+                    console.log('ServiceWorker registration successful:', registration.scope);
+                }).catch((err) => {
+                    console.error('ServiceWorker registration failed:', err);
                 });
             });
         }
